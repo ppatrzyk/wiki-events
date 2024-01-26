@@ -1,0 +1,10 @@
+version: "3"
+services:
+  rabbit:
+    image: rabbitmq:3.12.12
+    # TODO local only, fix later
+    ports:
+      - "5672:5672"
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./definitions.json:/etc/rabbitmq/definitions.json

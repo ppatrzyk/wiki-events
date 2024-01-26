@@ -1,0 +1,51 @@
+{
+    "users": [
+      {
+        "name": "user_666",  
+        "password_hash": "rLMB84n6Xis2BnwnQ1bNoNtm8eSkKnsTskUrzpovZ6NSFdqU",
+        "hashing_algorithm": "rabbit_password_hashing_sha256",
+        "tags": "administrator"
+      }
+    ],
+    "vhosts":[
+        {"name":"/"}
+    ],
+    "permissions": [
+      {
+        "user": "user_666",
+        "vhost": "/",
+        "configure": ".*",
+        "write": ".*",
+        "read": ".*"
+      }
+    ],
+    "queues":[
+        {
+          "name":"testqueue",
+          "vhost":"/",
+          "durable":true,
+          "auto_delete":false,
+          "arguments":{}
+        }
+    ],
+    "exchanges": [
+      {
+        "name": "testqueue",
+        "vhost": "/",
+        "type": "fanout",
+        "durable": true,
+        "auto_delete": false,
+        "internal": false,
+        "arguments": {}
+      }
+    ],
+    "bindings": [
+      {
+        "source": "testqueue",
+        "vhost": "/",
+        "destination": "testqueue",
+        "destination_type": "queue",
+        "arguments": {}
+      }
+    ]
+}
