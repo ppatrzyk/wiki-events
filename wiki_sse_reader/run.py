@@ -7,6 +7,7 @@ import time
 
 URL = os.environ["URL"]
 RABBIT_CONN_STR = os.environ["RABBIT_CONN_STR"]
+RABBIT_EXCHANGE = os.environ["RABBIT_EXCHANGE"]
 
 def stream():
     """
@@ -26,7 +27,7 @@ def stream():
             for sse in event_source.iter_sse():
                 # print(sse.event, sse.data, sse.id, sse.retry)
                 logging.info("msg processed")
-                channel.basic_publish(exchange="testqueue", routing_key="testqueue", body=sse.data)
+                channel.basic_publish(exchange=RABBIT_EXCHANGE, routing_key=RABBIT_EXCHANGE, body=sse.data)
 
 if __name__ == '__main__':
     # TODO handle reconnect to continue from last event id?
@@ -34,6 +35,7 @@ if __name__ == '__main__':
     while True:
         try:
             stream()
-        except:
-            logging.warning("Connection break, repeat in 1s")
+        except Exception as e:
+            logging.warning("Connection break, repeat in 1s, error:")
+            logging.warning(str(e))
             time.sleep(1)

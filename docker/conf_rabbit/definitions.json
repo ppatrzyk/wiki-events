@@ -21,16 +21,19 @@
     ],
     "queues":[
         {
-          "name":"testqueue",
+          "name":"wikistream",
           "vhost":"/",
           "durable":true,
           "auto_delete":false,
-          "arguments":{}
+          "arguments":{
+            "x-queue-type": "stream",
+            "x-max-age": "5m"
+          }
         }
     ],
     "exchanges": [
       {
-        "name": "testqueue",
+        "name": "wikiexchange",
         "vhost": "/",
         "type": "fanout",
         "durable": true,
@@ -41,9 +44,9 @@
     ],
     "bindings": [
       {
-        "source": "testqueue",
+        "source": "wikiexchange",
         "vhost": "/",
-        "destination": "testqueue",
+        "destination": "wikistream",
         "destination_type": "queue",
         "arguments": {}
       }
