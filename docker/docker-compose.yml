@@ -1,10 +1,20 @@
 version: "3"
 services:
+  wikissereader:
+    image: wikissereader:latest
+    environment:
+      - URL=https://stream.wikimedia.org/v2/stream/recentchange
+      - RABBIT_CONN_STR=amqp://user_666:password_666@rabbit:5672
+    links:
+      - rabbit
+    depends_on:
+      - rabbit
   rabbit:
-    image: rabbitmq:3.12.12
+    image: rabbitmq:3.12.12-management
     # TODO local only, fix later
     ports:
       - "5672:5672"
+      - "15672:15672"
     volumes:
-      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-      - ./definitions.json:/etc/rabbitmq/definitions.json
+      - ./conf_rabbit/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./conf_rabbit/definitions.json:/etc/rabbitmq/definitions.json

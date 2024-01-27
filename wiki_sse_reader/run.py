@@ -5,12 +5,7 @@ import os
 import pika
 import time
 
-# URL = "https://stream.wikimedia.org/v2/stream/test"
-URL = "https://stream.wikimedia.org/v2/stream/recentchange"
-HEADERS = {"Accept": "application/json"}
-# HEADERS = {"Accept": "text/event-stream"}
-# "amqp://user_666:password_666@localhost:5672"
-# "amqp://user_666:password_666@rabbit:5672"
+URL = os.environ["URL"]
 RABBIT_CONN_STR = os.environ["RABBIT_CONN_STR"]
 
 def stream():
@@ -24,7 +19,7 @@ def stream():
             "client": httpx_client,
             "method": "GET",
             "url": URL,
-            "headers": HEADERS
+            "headers": {"Accept": "application/json"}
         }
         channel = rabbit_client.channel()
         with connect_sse(**httpx_connect_kwargs) as event_source:
