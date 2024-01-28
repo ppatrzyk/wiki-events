@@ -21,13 +21,13 @@
     ],
     "queues":[
         {
-          "name":"wikistream",
+          "name":"wikiqueue",
           "vhost":"/",
           "durable":true,
           "auto_delete":false,
           "arguments":{
-            "x-queue-type": "stream",
-            "x-max-age": "5m"
+            "x-queue-type": "classic",
+            "x-message-ttl": 3600000
           }
         }
     ],
@@ -46,7 +46,7 @@
       {
         "source": "wikiexchange",
         "vhost": "/",
-        "destination": "wikistream",
+        "destination": "wikiqueue",
         "destination_type": "queue",
         "arguments": {}
       }

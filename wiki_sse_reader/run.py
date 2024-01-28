@@ -1,5 +1,7 @@
+from datetime import datetime, timezone
 import httpx
 from httpx_sse import connect_sse
+import json
 import logging
 import os
 import pika
@@ -8,6 +10,12 @@ import time
 URL = os.environ["URL"]
 RABBIT_CONN_STR = os.environ["RABBIT_CONN_STR"]
 RABBIT_EXCHANGE = os.environ["RABBIT_EXCHANGE"]
+
+def _get_time():
+    """
+    Time format helper
+    """
+    return datetime.now(tz=timezone.utc).isoformat()
 
 def stream():
     """
@@ -25,9 +33,13 @@ def stream():
         channel = rabbit_client.channel()
         with connect_sse(**httpx_connect_kwargs) as event_source:
             for sse in event_source.iter_sse():
-                # print(sse.event, sse.data, sse.id, sse.retry)
+                # TODO? sse.data is unparsed json, where to reformat/define?
+                msg = {
+                    "time": _get_time(),
+                    "data": sse.data,
+                }
+                channel.basic_publish(exchange=RABBIT_EXCHANGE, routing_key=RABBIT_EXCHANGE, body=json.dumps(msg))
                 logging.info("msg processed")
-                channel.basic_publish(exchange=RABBIT_EXCHANGE, routing_key=RABBIT_EXCHANGE, body=sse.data)
 
 if __name__ == '__main__':
     # TODO handle reconnect to continue from last event id?

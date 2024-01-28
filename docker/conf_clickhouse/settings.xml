@@ -1,0 +1,33 @@
+<clickhouse>
+    <max_server_memory_usage_to_ram_ratio>0.9</max_server_memory_usage_to_ram_ratio>
+    <metric_log>
+        <ttl>event_date + INTERVAL 1 DAY DELETE</ttl>
+    </metric_log>
+    <asynchronous_metric_log>
+        <ttl>event_date + INTERVAL 1 DAY DELETE</ttl>
+    </asynchronous_metric_log>
+    <query_log>
+        <ttl>event_date + INTERVAL 1 DAY DELETE</ttl>
+    </query_log>
+    <query_thread_log>
+        <ttl>event_date + INTERVAL 1 DAY DELETE</ttl>
+    </query_thread_log>
+    <trace_log>
+        <ttl>event_date + INTERVAL 1 DAY DELETE</ttl>
+    </trace_log>
+    <part_log>
+        <ttl>event_date + INTERVAL 1 DAY DELETE</ttl>
+    </part_log>
+    <crash_log>
+        <ttl>event_date + INTERVAL 1 DAY DELETE</ttl>
+    </crash_log>
+    <text_log>
+        <ttl>event_date + INTERVAL 1 DAY DELETE</ttl>
+    </text_log>
+    <backup_log>
+        <ttl>event_date + INTERVAL 1 DAY DELETE</ttl>
+    </backup_log>
+    <session_log>
+        <ttl>event_date + INTERVAL 1 DAY DELETE</ttl>
+    </session_log>
+</clickhouse>

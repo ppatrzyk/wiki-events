@@ -23,3 +23,18 @@ services:
       - ./conf_rabbit/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
       - ./conf_rabbit/definitions.json:/etc/rabbitmq/definitions.json
       - ./data_rabbit:/var/lib/rabbitmq/mnesia/
+  clickhouse:
+    image: clickhouse/clickhouse-server:23.8.9.54
+    environment:
+      - CLICKHOUSE_DB=wiki
+      - CLICKHOUSE_USER=user_666
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+      - CLICKHOUSE_PASSWORD=password_666
+    volumes:
+    - ./conf_clickhouse/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    - ./conf_clickhouse/settings.xml:/etc/clickhouse-server/config.d/settings.xml
+    - ./data_clickhouse:/var/lib/clickhouse/
+    links:
+      - rabbit
+    depends_on:
+      - rabbit
