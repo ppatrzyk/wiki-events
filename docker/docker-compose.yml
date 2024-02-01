@@ -9,7 +9,8 @@ services:
     links:
       - rabbit
     depends_on:
-      - rabbit
+      rabbit:
+        condition: service_healthy
   rabbit:
     image: rabbitmq:3.12.12-management
     hostname: myrabbit
@@ -23,8 +24,15 @@ services:
       - ./conf_rabbit/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
       - ./conf_rabbit/definitions.json:/etc/rabbitmq/definitions.json
       - ./data_rabbit:/var/lib/rabbitmq/mnesia/
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
   clickhouse:
     image: clickhouse/clickhouse-server:23.8.9.54
+    ports:
+      - "8123:8123"
     environment:
       - CLICKHOUSE_DB=wiki
       - CLICKHOUSE_USER=user_666
@@ -37,4 +45,5 @@ services:
     links:
       - rabbit
     depends_on:
-      - rabbit
+      rabbit:
+        condition: service_healthy
