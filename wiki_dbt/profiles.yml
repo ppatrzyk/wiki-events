@@ -1,0 +1,11 @@
+clickhouse:
+  target: prod
+  outputs:
+    prod:
+      type: clickhouse
+      schema: wiki
+      host: localhost
+      port: 8123
+      user: user_666
+      password: password_666
+      secure: False

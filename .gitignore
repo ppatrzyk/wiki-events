@@ -1,2 +1,9 @@
-ssevenv
 docker/data*
+
+logs*
+wiki_dbt/target/
+wiki_dbt/dbt_packages/
+wiki_dbt/logs/
+
+dbtvenv
+ssevenv
