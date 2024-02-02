@@ -1,21 +1,41 @@
 
 version: 2
 
+sources:
+  - name: wiki
+    tables:
+    - name: wiki
+
 models:
-  - name: my_first_dbt_model
-    description: "A starter dbt model"
+  - name: wiki_hourly_summary
+    description: "Number of events by hour"
     columns:
-      - name: id
-        description: "The primary key for this table"
+      - name: interval
+        description: "Hourly interval for aggregation"
         tests:
           - unique
           - not_null
-
-  - name: my_second_dbt_model
-    description: "A starter dbt model"
+      - name: events
+        description: "Number of events"
+        tests:
+          - not_null
+      - name: update_time
+        description: "Table update time"
+        tests:
+          - not_null
+  - name: wiki_minutely_summary
+    description: "Number of events by minute"
     columns:
-      - name: id
-        description: "The primary key for this table"
+      - name: interval
+        description: "Minutely interval for aggregation"
         tests:
           - unique
+          - not_null
+      - name: events
+        description: "Number of events"
+        tests:
+          - not_null
+      - name: update_time
+        description: "Table update time"
+        tests:
           - not_null

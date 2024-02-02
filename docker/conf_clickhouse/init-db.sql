@@ -4,6 +4,7 @@
 -- TODO parse data according to schema, change in run.py as well
 -- https://clickhouse.com/docs/en/sql-reference/data-types/json
 
+-- TODO decide multiple streams into multiple tables? wikissereader multiple containers each routing to own queue vs stuff dumped into one table
 
 USE wiki;
 
@@ -19,10 +20,12 @@ CREATE TABLE wiki_stream (
     date_time_input_format = 'best_effort';
 
 CREATE TABLE wiki (
+    id UUID DEFAULT generateUUIDv4(),
     time DateTime64(4, 'Etc/UTC'),
     data String
 )
-ENGINE = MergeTree() ORDER BY time;
+ENGINE = MergeTree()
+ORDER BY time;
 
-CREATE MATERIALIZED VIEW consumer TO wiki
-AS SELECT time, data FROM wiki_stream;
+CREATE MATERIALIZED VIEW wiki_stream_mv TO wiki
+AS SELECT generateUUIDv4(), time, data FROM wiki_stream;

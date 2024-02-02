@@ -47,3 +47,12 @@ services:
     depends_on:
       rabbit:
         condition: service_healthy
+  wikidbt:
+    image: wikidbt:latest
+    environment:
+      - DBT_ENV_SECRET_HOST=clickhouse
+    links:
+      - clickhouse
+    depends_on:
+      clickhouse:
+        condition: service_started

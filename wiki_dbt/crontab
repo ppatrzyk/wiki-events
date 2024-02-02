@@ -1,0 +1,1 @@
+* * * * * cd /wiki_dbt && /usr/local/bin/dbt run --target docker > /proc/1/fd/1 2>/proc/1/fd/2
