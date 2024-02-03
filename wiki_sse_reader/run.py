@@ -33,10 +33,9 @@ def stream():
         channel = rabbit_client.channel()
         with connect_sse(**httpx_connect_kwargs) as event_source:
             for sse in event_source.iter_sse():
-                # TODO? sse.data is unparsed json, where to reformat/define?
                 msg = {
-                    "time": _get_time(),
-                    "data": sse.data,
+                    "created_at": _get_time(),
+                    "data_raw_json": sse.data,
                 }
                 channel.basic_publish(exchange=RABBIT_EXCHANGE, routing_key=RABBIT_EXCHANGE, body=json.dumps(msg))
                 logging.info("msg processed")

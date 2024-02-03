@@ -4,9 +4,33 @@ version: 2
 sources:
   - name: wiki
     tables:
-    - name: wiki
+    - name: wiki_raw
 
 models:
+  - name: wiki
+    description: "Parsed events table"
+    columns:
+      - name: id
+        description: "Event id"
+        tests:
+          - unique
+          - not_null
+      - name: created_at
+        description: "Ingestion_time"
+        tests:
+          - not_null
+      - name: event_time
+        description: "Original event time"
+      - name: event_type
+        description: "Event type"
+      - name: domain
+        description: "Wiki page domain (url)"
+      - name: wiki_name
+        description: "Wiki page name"
+      - name: event_type
+        description: "Table update time"
+      - name: bot
+        description: "if change was created by bot"
   - name: wiki_hourly_summary
     description: "Number of events by hour"
     columns:
@@ -15,6 +39,24 @@ models:
         tests:
           - unique
           - not_null
+      - name: events
+        description: "Number of events"
+        tests:
+          - not_null
+      - name: update_time
+        description: "Table update time"
+        tests:
+          - not_null
+  - name: wiki_hourly_bywiki_summary
+    description: "Number of events by hour and wiki"
+    columns:
+      - name: interval
+        description: "Hourly interval for aggregation"
+        tests:
+          - unique
+          - not_null
+      - name: wiki_name
+        description: "Wiki page name"
       - name: events
         description: "Number of events"
         tests:
@@ -37,5 +79,34 @@ models:
           - not_null
       - name: update_time
         description: "Table update time"
+        tests:
+          - not_null
+  - name: wiki_minutely_bywiki_summary
+    description: "Number of events by minute and wiki"
+    columns:
+      - name: interval
+        description: "Minutely interval for aggregation"
+        tests:
+          - unique
+          - not_null
+      - name: wiki_name
+        description: "Wiki page name"
+      - name: events
+        description: "Number of events"
+        tests:
+          - not_null
+      - name: update_time
+        description: "Table update time"
+        tests:
+          - not_null
+  - name: wiki_event_types
+    description: "Event types and bots"
+    columns:
+      - name: event_type
+        description: "Table update time"
+      - name: bot
+        description: "if change was created by bot"
+      - name: events
+        description: "Number of events"
         tests:
           - not_null

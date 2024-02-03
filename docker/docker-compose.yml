@@ -49,8 +49,6 @@ services:
         condition: service_healthy
   wikidbt:
     image: wikidbt:latest
-    environment:
-      - DBT_ENV_SECRET_HOST=clickhouse
     links:
       - clickhouse
     depends_on:
