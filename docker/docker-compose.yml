@@ -42,6 +42,11 @@ services:
     - ./conf_clickhouse/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     - ./conf_clickhouse/settings.xml:/etc/clickhouse-server/config.d/settings.xml
     - ./data_clickhouse:/var/lib/clickhouse/
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8123/ping || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
     links:
       - rabbit
     depends_on:
@@ -53,4 +58,4 @@ services:
       - clickhouse
     depends_on:
       clickhouse:
-        condition: service_started
+        condition: service_healthy

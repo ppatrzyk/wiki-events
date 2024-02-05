@@ -110,3 +110,16 @@ models:
         description: "Number of events"
         tests:
           - not_null
+  - name: wiki_weekdays_summary
+    description: "Summary by day of the week and hour"
+    columns:
+      - name: wiki_name
+        description: "Wiki page name"
+      - name: weekday
+        description: "Day of the week"
+      - name: hour
+        description: "Hour within a day"
+      - name: events
+        description: "Average number of events"
+        tests:
+          - not_null
