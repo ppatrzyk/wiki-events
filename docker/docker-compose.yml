@@ -33,6 +33,7 @@ services:
     image: clickhouse/clickhouse-server:23.8.9.54
     ports:
       - "8123:8123"
+      - "9004:9004"
     environment:
       - CLICKHOUSE_DB=wiki
       - CLICKHOUSE_USER=clickhouserw

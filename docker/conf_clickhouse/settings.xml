@@ -1,4 +1,5 @@
 <clickhouse>
+    <mysql_port>9004</mysql_port>
     <max_server_memory_usage_to_ram_ratio>0.9</max_server_memory_usage_to_ram_ratio>
     <metric_log>
         <ttl>event_date + INTERVAL 1 DAY DELETE</ttl>

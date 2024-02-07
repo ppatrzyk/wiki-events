@@ -20,3 +20,10 @@ ssevenv
 **/*_override.tf.json
 **/.terraformrc
 **/terraform.rc
+
+evidence/.evidence
+evidence/.svelte-kit
+evidence/build
+evidence/node_modules
+evidence/static/data
+evidence/*.options.yaml

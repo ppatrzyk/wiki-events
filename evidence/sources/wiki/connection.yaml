@@ -1,0 +1,9 @@
+# This file was automatically generated
+name: wiki
+type: mysql
+options:
+  user: 'clickhousero'
+  host: 'localhost'
+  database: 'wiki'
+  password: 'clickhousero_pass'
+  port: 9004

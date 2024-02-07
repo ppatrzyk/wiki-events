@@ -23,5 +23,6 @@ ORDER BY created_at;
 CREATE MATERIALIZED VIEW wiki_stream_mv TO wiki_raw
 AS SELECT generateUUIDv4(), created_at, data_raw_json FROM wiki_stream;
 
-create user clickhousero identified with sha256_password by 'clickhousero_pass' settings profile 'readonly';
+-- plaintext due to https://github.com/ClickHouse/ClickHouse/issues/28159
+create user clickhousero identified with plaintext_password by 'clickhousero_pass' settings profile 'readonly';
 grant select on wiki.* to clickhousero;
