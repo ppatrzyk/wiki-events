@@ -4,7 +4,7 @@ services:
     image: wikissereader:latest
     environment:
       - URL=https://stream.wikimedia.org/v2/stream/recentchange
-      - RABBIT_CONN_STR=amqp://user_666:password_666@rabbit:5672
+      - RABBIT_CONN_STR=amqp://rabbitrw:rabbitrw_pass@rabbit:5672
       - RABBIT_EXCHANGE=wikiexchange
     links:
       - rabbit
@@ -35,9 +35,9 @@ services:
       - "8123:8123"
     environment:
       - CLICKHOUSE_DB=wiki
-      - CLICKHOUSE_USER=user_666
+      - CLICKHOUSE_USER=clickhouserw
       - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
-      - CLICKHOUSE_PASSWORD=password_666
+      - CLICKHOUSE_PASSWORD=clickhouserw_pass
     volumes:
     - ./conf_clickhouse/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     - ./conf_clickhouse/settings.xml:/etc/clickhouse-server/config.d/settings.xml

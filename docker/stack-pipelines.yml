@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  wikissereader:
+    image: wikissereader:latest
+    environment:
+      - URL=https://stream.wikimedia.org/v2/stream/recentchange
+      - RABBIT_CONN_STR=amqp://rabbitrw:rabbitrw_pass@rabbit:5672
+      - RABBIT_EXCHANGE=wikiexchange
+    networks:
+      - internal
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 256M
+  wikidbt:
+    image: wikidbt:latest
+    networks:
+      - internal
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 256M
+
+networks:
+  internal:
+    driver: overlay
+    name: internal
+    external: true
+    attachable: true

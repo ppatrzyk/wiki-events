@@ -1,0 +1,75 @@
+version: "3.8"
+
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:23.8.9.54
+    user: "1221:1221"
+    environment:
+      - CLICKHOUSE_DB=wiki
+      - CLICKHOUSE_USER=clickhouserw
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+      - CLICKHOUSE_PASSWORD=clickhouserw_pass
+    configs:
+      - source: clickhouse-init
+        target: /docker-entrypoint-initdb.d/init-db.sql
+      - source: clickhouse-settings
+        target: /etc/clickhouse-server/config.d/settings.xml
+    volumes:
+      - ./data_clickhouse:/var/lib/clickhouse/
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8123/ping || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    networks:
+      - internal
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 1024M
+  rabbit:
+    image: rabbitmq:3.12.12-management
+    hostname: myrabbit
+    environment:
+      - RABBITMQ_NODENAME=myrabbit
+    configs:
+      - source: rabbit-conf
+        target: /etc/rabbitmq/rabbitmq.conf
+      - source: rabbit-definitions
+        target: /etc/rabbitmq/definitions.json
+    volumes:
+      - ./data_rabbit:/var/lib/rabbitmq/mnesia/
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    networks:
+      - internal
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 256M
+
+networks:
+  internal:
+    driver: overlay
+    name: internal
+    external: true
+    attachable: true
+
+configs:
+  clickhouse-init:
+    file: ./conf_clickhouse/init-db.sql
+  clickhouse-settings:
+    file: ./conf_clickhouse/settings.xml
+  rabbit-conf:
+    file: ./conf_rabbit/rabbitmq.conf
+  rabbit-definitions:
+    file: ./conf_rabbit/definitions.json

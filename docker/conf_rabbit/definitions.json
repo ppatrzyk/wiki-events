@@ -1,10 +1,16 @@
 {
     "users": [
       {
-        "name": "user_666",  
-        "password_hash": "rLMB84n6Xis2BnwnQ1bNoNtm8eSkKnsTskUrzpovZ6NSFdqU",
+        "name": "rabbitrw",  
+        "password_hash": "v8b1nOod70hQlbejBICe9WDz6Dr2sPBmLnNuUctt6X+GT/fZ",
         "hashing_algorithm": "rabbit_password_hashing_sha256",
         "tags": "administrator"
+      },
+      {
+        "name": "rabbitro",  
+        "password_hash": "TGgtCPiUha1Yv/yVYY9mk4ZOj5bQFoZjqGBtxR/EClra/Q42",
+        "hashing_algorithm": "rabbit_password_hashing_sha256",
+        "tags": "readonly"
       }
     ],
     "vhosts":[
@@ -12,10 +18,17 @@
     ],
     "permissions": [
       {
-        "user": "user_666",
+        "user": "rabbitrw",
         "vhost": "/",
         "configure": ".*",
         "write": ".*",
+        "read": ".*"
+      },
+      {
+        "user": "rabbitro",
+        "vhost": "/",
+        "configure": "",
+        "write": "",
         "read": ".*"
       }
     ],
