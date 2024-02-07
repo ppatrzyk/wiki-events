@@ -1,5 +1,6 @@
 docker/data*
 
+**/*.log
 logs*
 wiki_dbt/target/
 wiki_dbt/dbt_packages/
@@ -7,3 +8,15 @@ wiki_dbt/logs/
 
 dbtvenv
 ssevenv
+
+**/.terraform/*
+**/*.tfstate
+**/*.tfstate.*
+**/*.tfvars
+**/*.tfvars.json
+**/override.tf
+**/override.tf.json
+**/*_override.tf
+**/*_override.tf.json
+**/.terraformrc
+**/terraform.rc

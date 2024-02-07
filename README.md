@@ -3,14 +3,39 @@
 Project for https://github.com/DataTalksClub/data-engineering-zoomcamp
 
 TODO:
-- terraform for hetzner VPS
-- swarm setup on the server
-- client script for readin wiki events (python / erlang)
-    - https://wikitech.wikimedia.org/wiki/Event_Platform/EventStreams#Response_Format
-    - https://stream.wikimedia.org/?doc#/
-- write to nats / rabbit, read stream in clickhouse
-    - https://clickhouse.com/docs/en/engines/table-engines/integrations/nats
-- stream reformat in dbt or else?
-    - https://clickhouse.com/docs/en/integrations/dbt
 - bi app for dashboard
 - write readme with proj description, some chart etc
+
+## Architecture
+
+TODO schema img + description
+
+## Deployment
+
+### Cloud
+
+#### Terraform
+
+Create file `terraform/terraform.tfvars` with the following contents:
+
+```
+hcloud_token = "<HETZNER_API>"
+```
+
+TODO terraform instructions
+
+#### Server setup
+
+[install docker](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
+
+#### Docker Swarm
+
+set up swarm and deploy
+
+```
+TODO swarm commands
+```
+
+### Local
+
+todo docker compose desc
