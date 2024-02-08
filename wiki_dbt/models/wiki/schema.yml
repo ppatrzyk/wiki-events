@@ -123,3 +123,10 @@ models:
         description: "Average number of events"
         tests:
           - not_null
+  - name: wiki_bywiki_summary
+    description: "Total number of events by wiki"
+    columns:
+      - name: wiki_name
+        description: "Wiki page name"
+      - name: events
+        description: "Number of events"

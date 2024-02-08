@@ -2,8 +2,8 @@
 
 select
     wiki_name,
-    dateName('weekday', interval) as weekday,
-    dateName('hour', interval) as hour,
+    cast(toDayOfWeek(interval, 0), 'String') || '_' || dateName('weekday', interval) as weekday,
+    toHour(interval) as hour,
     avg(events) as events
 from {{ ref('wiki_hourly_bywiki_summary') }}
 group by wiki_name, weekday, hour
