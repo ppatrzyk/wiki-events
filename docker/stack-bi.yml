@@ -1,8 +1,25 @@
 version: "3.8"
 
 services:
+  metabase:
+    image: metabase/metabase:v0.48.5
+    volumes:
+      - ./conf_metabase/metabase.db:/metabase.db
+      - ./conf_metabase/clickhouse.metabase-driver.jar:/plugins/clickhouse.metabase-driver.jar
+    networks:
+      - internal
+    environment:
+      - MB_DB_TYPE=h2
+      - MB_DB_FILE=/metabase.db
+      - JAVA_TIMEZONE=UTC
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1024M
 
-# TODO BI + traefik
+# TODO traefik
 
 networks:
   internal:

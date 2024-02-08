@@ -34,6 +34,15 @@ set up swarm and deploy
 
 ```
 TODO swarm commands
+
+wget https://github.com/ClickHouse/metabase-clickhouse-driver/releases/download/1.3.3/clickhouse.metabase-driver.jar
+```
+
+metabase
+```
+admin@admin.admin
+metabase_pass1
+http://localhost:3000/public/dashboard/6d2cbb29-e310-4c80-ac3d-b8903d92efaf
 ```
 
 ### Local

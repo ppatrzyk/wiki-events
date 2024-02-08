@@ -59,3 +59,19 @@ services:
     depends_on:
       clickhouse:
         condition: service_healthy
+  metabase:
+    image: metabase/metabase:v0.48.5
+    ports:
+      - "3000:3000"
+    environment:
+      - MB_DB_TYPE=h2
+      - MB_DB_FILE=/metabase.db
+      - JAVA_TIMEZONE=UTC
+    volumes:
+      - ./conf_metabase/metabase.db:/metabase.db
+      - ./conf_metabase/clickhouse.metabase-driver.jar:/plugins/clickhouse.metabase-driver.jar
+    links:
+      - clickhouse
+    depends_on:
+      clickhouse:
+        condition: service_healthy
