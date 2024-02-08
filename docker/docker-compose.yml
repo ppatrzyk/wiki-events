@@ -14,7 +14,6 @@ services:
   rabbit:
     image: rabbitmq:3.12.12-management
     hostname: myrabbit
-    # TODO local only, fix later
     ports:
       - "5672:5672"
       - "15672:15672"

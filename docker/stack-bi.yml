@@ -16,10 +16,50 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: '0.5'
+          cpus: '0.2'
           memory: 1024M
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=internal"
+        # https://doc.traefik.io/traefik/middlewares/http/basicauth/#configuration-options
+        - "traefik.http.middlewares.auth.basicauth.users=<INSERT_USERS>"
+        # Router 
+        - "traefik.http.routers.metabase.priority=1"
+        - "traefik.http.routers.metabase.rule=Host(`<IP_ADDRESS>`)"
+        - "traefik.http.routers.metabase.service=metabase"
+        - "traefik.http.routers.metabase.entrypoints=web"
+        - "traefik.http.routers.metabase.middlewares=auth"
+        - "traefik.http.services.metabase.loadbalancer.server.port=3000"
+        # Public Router
+        - "traefik.http.routers.metabase_public.priority=2"
+        - "traefik.http.routers.metabase_public.rule=(Host(`<IP_ADDRESS>`) && PathPrefix(`/public/`))"
+        - "traefik.http.routers.metabase_public.service=metabase"
+        - "traefik.http.routers.metabase_public.entrypoints=web"
 
-# TODO traefik
+  traefik:
+    image: traefik:v2.10.7
+    command:
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+      - "--providers.docker.watch=true"
+      - "--providers.docker.swarmMode=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=internal"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - internal
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 128M
 
 networks:
   internal:

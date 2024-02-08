@@ -3,7 +3,6 @@ version: "3.8"
 services:
   clickhouse:
     image: clickhouse/clickhouse-server:23.8.9.54
-    user: "1221:1221"
     environment:
       - CLICKHOUSE_DB=wiki
       - CLICKHOUSE_USER=clickhouserw
@@ -15,7 +14,7 @@ services:
       - source: clickhouse-settings
         target: /etc/clickhouse-server/config.d/settings.xml
     volumes:
-      - ./data_clickhouse:/var/lib/clickhouse/
+      - /var/lib/swarm/data_clickhouse:/var/lib/clickhouse/
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:8123/ping || exit 1
       interval: 10s
@@ -41,12 +40,7 @@ services:
       - source: rabbit-definitions
         target: /etc/rabbitmq/definitions.json
     volumes:
-      - ./data_rabbit:/var/lib/rabbitmq/mnesia/
-    healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
-      interval: 10s
-      timeout: 10s
-      retries: 3
+      - /var/lib/swarm/data_rabbit:/var/lib/rabbitmq/mnesia/
     networks:
       - internal
     deploy:
