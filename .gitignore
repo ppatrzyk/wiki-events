@@ -9,6 +9,8 @@ wiki_dbt/logs/
 
 dbtvenv
 ssevenv
+dashvenv
+**/__pycache__
 
 **/.terraform/*
 **/*.tfstate
