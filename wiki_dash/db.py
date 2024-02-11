@@ -4,13 +4,13 @@ import os
 # "clickhouse://[login]:[password]@[host]:[port]/[database]"
 CONN_STR = os.environ["CONN_STR"]
 
-def execute(sql):
+def execute(**params):
     """
     Execute sql
     """
     with clickhouse_driver.dbapi.connect(CONN_STR) as conn:
         cursor = conn.cursor()
-        cursor.execute(sql)
+        cursor.execute(**params)
         col_names = tuple(el[0] for el in cursor.description)
         rows = cursor.fetchall()
     return _reformat_cols(col_names, rows)
