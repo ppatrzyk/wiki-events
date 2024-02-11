@@ -21,16 +21,3 @@ def _reformat_cols(col_names, rows):
     """
     data = {val: tuple(row[i] for row in rows) for i, val in enumerate(col_names)}
     return data
-
-def groupby_traces(data, group, x, y, type):
-    traces = list()
-    for key in set(data[group]):
-        bool_map = tuple(key == entry for entry in data[group])
-        trace = {
-            "type": type,
-            "name": key,
-            "x": tuple(entry for i, entry in enumerate(data[x]) if bool_map[i]),
-            "y": tuple(entry for i, entry in enumerate(data[y]) if bool_map[i]),
-        }
-        traces.append(trace)
-    return traces
