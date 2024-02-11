@@ -1,6 +1,9 @@
 from dash import Dash, html, dcc
 import db
 
+WIKIS = ("dewiki", "eswiki", "fawiki", "frwiki", "jawiki", "plwiki", "ukwiki", "urwiki", "zhwiki", )
+WIKIS_SQL = ", ".join((f"'{wiki}'" for wiki in WIKIS))
+
 def _get_fig_data():
     """
     Query and format data for figures
@@ -13,7 +16,7 @@ def _get_fig_data():
             {"x": wiki_hourly_summary.get("interval"), "y": wiki_hourly_summary.get("events"), "type": "line", "name": "Hourly count"},
         ],
         "layout": {
-            "title": "Wiki hourly summary"
+            "title": "Total hourly events"
         }
     }
     
@@ -24,15 +27,27 @@ def _get_fig_data():
             {"x": wiki_minutely_summary.get("interval"), "y": wiki_minutely_summary.get("events"), "type": "line", "name": "Minutely count"},
         ],
         "layout": {
-            "title": "Wiki minutely summary"
+            "title": "Total minutely events"
         }
     }
 
     # wiki_hourly_bywiki_summary
-    # TODO
+    wiki_hourly_bywiki_summary = db.execute(f"select * from wiki_hourly_bywiki_summary where wiki_name in ({WIKIS_SQL}) order by interval asc")
+    figures["wiki_hourly_bywiki_summary"] = {
+        "data": db.groupby_traces(wiki_hourly_bywiki_summary, "wiki_name", "interval", "events", "line"),
+        "layout": {
+            "title": "Hourly events by wiki"
+        }
+    }
 
     # wiki_minutely_bywiki_summary
-    # TODO
+    wiki_minutely_bywiki_summary = db.execute(f"select * from wiki_minutely_bywiki_summary where wiki_name in ({WIKIS_SQL}) order by interval asc")
+    figures["wiki_minutely_bywiki_summary"] = {
+        "data": db.groupby_traces(wiki_minutely_bywiki_summary, "wiki_name", "interval", "events", "line"),
+        "layout": {
+            "title": "Minutely events by wiki"
+        }
+    }
 
     # wiki_weekdays_summary
     # TODO picker for wiki
@@ -56,15 +71,6 @@ def _get_fig_data():
             "title": "Total events by wiki (top 20)"
         }
     }
-
-    # wiki_event_types
-    wiki_event_types = db.execute("select * from wiki_event_types order by event_type, bot")
-    figures["wiki_event_types"] = {
-        "data": db.groupby_traces(wiki_event_types, "bot", "event_type", "events", "bar"),
-        "layout": {
-            "title": "Total events by wiki (top 20)"
-        }
-    }
     return figures
 
 def _render_layout():
@@ -76,9 +82,10 @@ def _render_layout():
         # html.Div(children=str(data)),
         dcc.Graph(figure=figures.get("wiki_minutely_summary")),
         dcc.Graph(figure=figures.get("wiki_hourly_summary")),
+        dcc.Graph(figure=figures.get("wiki_minutely_bywiki_summary")),
+        dcc.Graph(figure=figures.get("wiki_hourly_bywiki_summary")),
         dcc.Graph(figure=figures.get("wiki_weekdays_summary")),
         dcc.Graph(figure=figures.get("wiki_bywiki_summary")),
-        dcc.Graph(figure=figures.get("wiki_event_types")),
     ])
     return layout
 

@@ -1,7 +1,8 @@
 import clickhouse_driver
+import os
 
-# CONN_STR = "clickhouse://[login]:[password]@[host]:[port]/[database]"
-CONN_STR = "clickhouse://clickhousero:clickhousero_pass@localhost:9000/wiki"
+# "clickhouse://[login]:[password]@[host]:[port]/[database]"
+CONN_STR = os.environ["CONN_STR"]
 
 def execute(sql):
     """

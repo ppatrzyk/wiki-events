@@ -1,5 +1,4 @@
 docker/data*
-docker/conf_metabase/clickhouse.metabase-driver.jar
 
 **/*.log
 logs*

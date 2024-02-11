@@ -1,40 +1,29 @@
 version: "3.8"
 
 services:
-  metabase:
-    image: metabase/metabase:v0.48.5
-    volumes:
-      - ./conf_metabase/metabase.db:/metabase.db
-      - ./conf_metabase/clickhouse.metabase-driver.jar:/plugins/clickhouse.metabase-driver.jar
+  wikidash:
+    image: wikidash:latest
     networks:
       - internal
     environment:
-      - MB_DB_TYPE=h2
-      - MB_DB_FILE=/metabase.db
-      - JAVA_TIMEZONE=UTC
+      - CONN_STR=clickhouse://clickhousero:clickhousero_pass@clickhouse:9000/wiki
     deploy:
       replicas: 1
       resources:
         limits:
           cpus: '0.2'
-          memory: 1024M
+          memory: 256M
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=internal"
         # https://doc.traefik.io/traefik/middlewares/http/basicauth/#configuration-options
         - "traefik.http.middlewares.auth.basicauth.users=<INSERT_USERS>"
-        # Router 
-        - "traefik.http.routers.metabase.priority=1"
-        - "traefik.http.routers.metabase.rule=Host(`<IP_ADDRESS>`)"
-        - "traefik.http.routers.metabase.service=metabase"
-        - "traefik.http.routers.metabase.entrypoints=web"
-        - "traefik.http.routers.metabase.middlewares=auth"
-        - "traefik.http.services.metabase.loadbalancer.server.port=3000"
-        # Public Router
-        - "traefik.http.routers.metabase_public.priority=2"
-        - "traefik.http.routers.metabase_public.rule=(Host(`<IP_ADDRESS>`) && PathPrefix(`/public/`))"
-        - "traefik.http.routers.metabase_public.service=metabase"
-        - "traefik.http.routers.metabase_public.entrypoints=web"
+        - "traefik.http.routers.wikidash.priority=1"
+        - "traefik.http.routers.wikidash.rule=Host(`<IP_ADDRESS>`)"
+        - "traefik.http.routers.wikidash.service=wikidash"
+        - "traefik.http.routers.wikidash.entrypoints=web"
+        - "traefik.http.routers.wikidash.middlewares=auth"
+        - "traefik.http.services.wikidash.loadbalancer.server.port=8000"
 
   traefik:
     image: traefik:v2.10.7

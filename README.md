@@ -30,12 +30,9 @@ sudo docker build -t wikissereader:latest .
 
 cd wiki-events/wiki_dbt/
 sudo docker build . -t wikidbt:latest
-```
 
-4. Download clickhouse driver 
-
-```
-curl -L https://github.com/ClickHouse/metabase-clickhouse-driver/releases/download/1.3.3/clickhouse.metabase-driver.jar > docker/conf_metabase/clickhouse.metabase-driver.jar
+cd wiki-events/wiki_dash/
+sudo docker build . -t wikidash:latest
 ```
 
 ### Cloud
@@ -69,14 +66,6 @@ docker stack deploy -c docker/stack-bi.yml bi
 traefik pass
 https://doc.traefik.io/traefik/middlewares/http/basicauth/#configuration-options
 
-metabase
-```
-admin@admin.admin
-metabase_pass1
-http://localhost:3000/public/dashboard/6d2cbb29-e310-4c80-ac3d-b8903d92efaf
-```
-
-TODO fix routers, now auth required on all requests
 
 ### Local
 
