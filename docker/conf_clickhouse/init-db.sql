@@ -22,6 +22,7 @@ ORDER BY created_at;
 
 CREATE MATERIALIZED VIEW wiki_stream_mv TO wiki_raw
 AS SELECT generateUUIDv4(), created_at, data_raw_json FROM wiki_stream;
+alter table wiki_raw modify TTL toDateTime(created_at) + INTERVAL 1 DAY;
 
 create user clickhousero identified with sha256_password by 'clickhousero_pass' settings profile 'readonly';
 grant select on wiki.* to clickhousero;

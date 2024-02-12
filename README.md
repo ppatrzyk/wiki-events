@@ -1,72 +1,42 @@
 # wiki-events
 
-Project for https://github.com/DataTalksClub/data-engineering-zoomcamp
+System that consumes data from [Wikipedia EventStreams](https://wikitech.wikimedia.org/wiki/Event_Platform/EventStreams) service and exposes analytics dashboard with insights about activity on different wikipedia instances. See [Architecture](#architecture) section for tech details and [Deployment](deploy.md) for instructions on running the code.
 
-TODO write readme with proj description, some chart etc
+Project submitted for [Data Engineering Zoomcamp 2024](https://github.com/DataTalksClub/data-engineering-zoomcamp).
 
 ## Architecture
 
-TODO schema img + description
+Guiding principles of tech choices:
 
-## Deployment
+- avoiding vendor lock in,
+- preferring lightweight tools without redudant features,
+- configuration kept in repo.
 
-Common actions to be taken bot for cloud and local. Adjust paths for your system.
+This repo contains example [terraform](terraform) config for [Deployment](deploy.md) using _Hetzner Cloud_ but in principle everything can work on _any_ linux server, hosted _anywhere_. Also, no proprietary tools are used.
 
-1. Clone this repo
+### Components
 
-```
-todo
-```
+| Component | Description |
+| --- | --- |
+| [wiki_sse_reader](wiki_sse_reader) | Python service reading _Server-sent events_ from wikipedia source |
+| [wiki_dbt](wiki_dbt) | Models (i.e. SQL code) for transforming data within database |
+| [wiki_dash](wiki_dash) | BI dashboard app defined in Python ([Dash](https://github.com/plotly/dash)) |
+| [RabbitMQ](https://github.com/rabbitmq/rabbitmq-server) | Message queue that handles events |
+| [Clickhouse](https://github.com/ClickHouse/ClickHouse) | Main OLAP database to store data and run analytics queries |
 
-2. Install Docker
+### Diagram
 
-[Instructions for Ubuntu](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository).
+![diagram](diagram/wiki_events.png)
 
-3. Build docker images
+### DB tables
 
-```
-cd wiki-events/wiki_sse_reader/
-sudo docker build -t wikissereader:latest .
-
-cd wiki-events/wiki_dbt/
-sudo docker build . -t wikidbt:latest
-
-cd wiki-events/wiki_dash/
-sudo docker build . -t wikidash:latest
-```
-
-### Cloud
-
-#### Terraform
-
-Create file `terraform/terraform.tfvars` with the following contents:
-
-```
-hcloud_token = "<HETZNER_API>"
-```
-
-TODO terraform instructions
-
-#### Docker Swarm
-
-set up swarm and deploy
-
-```
-mkdir /var/lib/swarm
-mkdir /var/lib/swarm/{data_clickhouse,data_rabbit}
-
-docker swarm init
-docker network create --scope=swarm --attachable -d overlay internal
-docker stack deploy -c docker/stack-data.yml data
-docker stack deploy -c docker/stack-pipelines.yml pipelines
-docker stack deploy -c docker/stack-bi.yml bi
-
-```
-
-traefik pass
-https://doc.traefik.io/traefik/middlewares/http/basicauth/#configuration-options
-
-
-### Local
-
-todo docker compose desc
+| table | level (medallion architecture) | description |
+| --- | --- | --- |
+| wiki_raw | bronze | Raw ingested wiki data |
+| wiki | silver | Parsed and filtered wiki data |
+| wiki_minutely_summary | gold | Event count by minute (total) |
+| wiki_hourly_summary | gold | Event count by hour (total) |
+| wiki_minutely_bywiki_summary | gold | Event count by minute (by wiki) |
+| wiki_hourly_bywiki_summary | gold | Event count by hour (by wiki) |
+| wiki_weekdays_summary | gold | Average event count for specific times of the week |
+| wiki_bywiki_summary | gold | Total event counts by wiki |

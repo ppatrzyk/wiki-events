@@ -99,17 +99,6 @@ models:
         description: "Table update time"
         tests:
           - not_null
-  - name: wiki_event_types
-    description: "Event types and bots"
-    columns:
-      - name: event_type
-        description: "Table update time"
-      - name: bot
-        description: "if change was created by bot"
-      - name: events
-        description: "Number of events"
-        tests:
-          - not_null
   - name: wiki_weekdays_summary
     description: "Summary by day of the week and hour"
     columns:

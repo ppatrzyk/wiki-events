@@ -4,7 +4,7 @@ import plotly
 
 LAYOUT_COMMON = {
       "font": {"size": 16, "family": "system-ui, sans-serif"},
-      "template": plotly.io.templates["ggplot2"],
+      "template": plotly.io.templates["plotly_dark"],
 }
 
 def _get_static_fig_data():
@@ -24,13 +24,13 @@ def _get_static_fig_data():
     }
     
     # wiki_minutely_summary
-    wiki_minutely_summary = db.execute(operation="select * from wiki_minutely_summary order by interval asc")
+    wiki_minutely_summary = db.execute(operation="select * from wiki_minutely_summary where interval >= subtractDays(now(), 1) order by interval asc")
     fig_data["wiki_minutely_summary"] = {
         "data": [
             {"x": wiki_minutely_summary.get("interval"), "y": wiki_minutely_summary.get("events"), "type": "line", "name": "Minutely count"},
         ],
         "layout": {
-            "title": "Total minutely events", **LAYOUT_COMMON
+            "title": "Total minutely events [last 24h]", **LAYOUT_COMMON
         }
     }
 
@@ -41,7 +41,7 @@ def _get_static_fig_data():
             {"x": wiki_bywiki_summary.get("wiki_name"), "y": wiki_bywiki_summary.get("events"), "type": "bar", "name": "Total events"},
         ],
         "layout": {
-            "title": "Total events by wiki (top 20)", **LAYOUT_COMMON
+            "title": "Total events by wiki [top 20]", **LAYOUT_COMMON
         }
     }
 
@@ -66,13 +66,13 @@ def _get_bywiki_fig_data(wiki):
             {"x": wiki_hourly_bywiki_summary.get("interval"), "y": wiki_hourly_bywiki_summary.get("events"), "type": "line", "name": wiki},
         ],
         "layout": {
-            "title": f"Hourly events ({wiki})", **LAYOUT_COMMON
+            "title": f"Hourly events [{wiki}]", **LAYOUT_COMMON
         }
     }
 
     # wiki_minutely_bywiki_summary
     wiki_minutely_bywiki_summary = db.execute(
-        operation="select * from wiki_minutely_bywiki_summary where wiki_name == %(wiki)s order by interval asc",
+        operation="select * from wiki_minutely_bywiki_summary where interval >= subtractDays(now(), 1) and wiki_name == %(wiki)s order by interval asc",
         parameters={"wiki": wiki}
     )
     fig_data["wiki_minutely_bywiki_summary"] = {
@@ -80,7 +80,7 @@ def _get_bywiki_fig_data(wiki):
             {"x": wiki_minutely_bywiki_summary.get("interval"), "y": wiki_minutely_bywiki_summary.get("events"), "type": "line", "name": wiki},
         ],
         "layout": {
-            "title": f"Minutely events ({wiki})", **LAYOUT_COMMON
+            "title": f"Minutely events [last 24h] [{wiki}]", **LAYOUT_COMMON
         }
     }
 
@@ -94,7 +94,7 @@ def _get_bywiki_fig_data(wiki):
             {"x": wiki_weekdays_summary.get("hour"), "y": wiki_weekdays_summary.get("weekday"), "z": wiki_weekdays_summary.get("events"), "type": "heatmap", "name": "Week heatmap"},
         ],
         "layout": {
-            "title": f"Weekly heatmap ({wiki})", **LAYOUT_COMMON
+            "title": f"Weekly heatmap [{wiki}]", **LAYOUT_COMMON
         }
     }
     return fig_data
@@ -105,14 +105,20 @@ def _render_layout():
     """
     static_fig_data = _get_static_fig_data()
     layout = html.Div([
-        dcc.Markdown("*intro content*"),
+        dcc.Markdown("""
+            # Wiki events dashboard
+            This dashboard show current data observed by [wiki-events](https://github.com/ppatrzyk/wiki-events).
+            All dates are in UTC.
+            ## General summaries
+        """),
         dcc.Graph(figure=static_fig_data.get("wiki_minutely_summary")),
         dcc.Graph(figure=static_fig_data.get("wiki_hourly_summary")),
         dcc.Graph(figure=static_fig_data.get("wiki_bywiki_summary")),
-        html.Div([
-            dcc.Markdown("*intro content*"),
-            dcc.Dropdown(static_fig_data.get("wiki_names"), 'plwiki', id='wiki-name-dropdown'),
-        ]),
+        dcc.Markdown("""
+            ## Specific wikis
+            In this section you can investigate data coming from specific wiki. Please choose wiki name in dropdown below.
+        """),
+        dcc.Dropdown(static_fig_data.get("wiki_names"), 'plwiki', id='wiki-name-dropdown'),
         dcc.Graph(id='wiki_minutely_bywiki_summary'),
         dcc.Graph(id='wiki_hourly_bywiki_summary'),
         dcc.Graph(id='wiki_weekdays_summary'),

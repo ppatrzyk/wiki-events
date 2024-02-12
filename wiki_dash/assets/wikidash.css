@@ -1,6 +1,16 @@
 body {
     font-family: system-ui, sans-serif;
+    color: #f2f5fa;
+    background-color: rgb(17,17,17);
     margin-left: 6em;
     margin-right: 6em;
     margin-top: 6em;
+}
+/* override dash dropdown style */
+.dash-dropdown {
+    max-width: 24em;
+}
+.Select, .Select-menu-outer, .Select-value, .Select-value-label {
+    color: #f2f5fa !important;
+    background-color: rgb(34, 34, 34) !important;
 }

@@ -17,9 +17,9 @@ services:
         - "traefik.enable=true"
         - "traefik.docker.network=internal"
         # https://doc.traefik.io/traefik/middlewares/http/basicauth/#configuration-options
-        - "traefik.http.middlewares.auth.basicauth.users=<INSERT_USERS>"
+        - "traefik.http.middlewares.auth.basicauth.users=dezoomcamp:$$apr1$$X8u6Setv$$IuFYCvAx5sY1BU4FbmADb1"
         - "traefik.http.routers.wikidash.priority=1"
-        - "traefik.http.routers.wikidash.rule=Host(`<IP_ADDRESS>`)"
+        - "traefik.http.routers.wikidash.rule=HostRegexp(`{name:.*}`)"
         - "traefik.http.routers.wikidash.service=wikidash"
         - "traefik.http.routers.wikidash.entrypoints=web"
         - "traefik.http.routers.wikidash.middlewares=auth"
