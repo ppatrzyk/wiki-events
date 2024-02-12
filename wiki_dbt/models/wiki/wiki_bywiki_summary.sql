@@ -2,6 +2,6 @@
 
 select
     wiki_name,
-    count(*) as events
-from {{ ref('wiki') }}
+    sum(events) as events
+from {{ ref('wiki_hourly_bywiki_summary') }}
 group by wiki_name
