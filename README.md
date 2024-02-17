@@ -1,6 +1,10 @@
 # wiki-events
 
-System that consumes data from [Wikipedia EventStreams](https://wikitech.wikimedia.org/wiki/Event_Platform/EventStreams) service and exposes analytics dashboard with insights about activity on different wikipedia instances. See [Architecture](#architecture) section for tech details and [Deployment](deploy.md) for instructions on running the code.
+System that consumes data from [Wikipedia EventStreams](https://wikitech.wikimedia.org/wiki/Event_Platform/EventStreams) service and exposes analytics dashboard with insights about activity on different wikipedia instances. See:
+
+- [Architecture](#architecture) section for tech details,
+- [Deployment](deploy.md) for instructions on running the code,
+- [Screenshot](screenshot.md) for overview of ready dashboard.
 
 Project submitted for [Data Engineering Zoomcamp 2024](https://github.com/DataTalksClub/data-engineering-zoomcamp).
 

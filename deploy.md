@@ -1,16 +1,12 @@
 # Deployment
 
+## Common
+
 Common actions to be taken both for cloud and local. Adjust paths for your system.
 
-1. Clone this repo
+1. [Install Docker](https://docs.docker.com/engine/install/)
 
-```
-git clone https://github.com/ppatrzyk/wiki-events.git
-```
-
-2. [Install Docker]((https://docs.docker.com/engine/install/))
-
-3. Build docker images
+2. Build docker images
 
 ```
 cd wiki-events/wiki_sse_reader/
@@ -42,11 +38,17 @@ terraform init
 terraform apply
 ```
 
-Server data for logging in is sent via email. When doing basic setup of the server, you need to ensure that firewall allows access to port `80`.
+Server data for logging in is sent via email.
 
 ### Docker Swarm
 
-set up swarm and deploy
+On the cloud server:
+
+1. Ensure that firewall allows access to port `80`.
+
+2. [set up tools](#common)
+
+3. set up swarm and deploy
 
 ```
 mkdir /var/lib/swarm
@@ -70,6 +72,10 @@ password: dezoomcamp
 ## Local
 
 Code can also be run locally using docker compose.
+
+1. [set up tools](#common)
+
+2. deploy with compose
 
 ```
 cd docker
