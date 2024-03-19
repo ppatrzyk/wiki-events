@@ -13,13 +13,13 @@ def _get_static_fig_data():
     """
     fig_data = dict()
     # wiki_hourly_summary
-    wiki_hourly_summary = db.execute(operation="select * from wiki_hourly_summary order by interval asc")
+    wiki_hourly_summary = db.execute(operation="select * from wiki_hourly_summary where interval >= subtractDays(now(), 7) order by interval asc")
     fig_data["wiki_hourly_summary"] = {
         "data": [
             {"x": wiki_hourly_summary.get("interval"), "y": wiki_hourly_summary.get("events"), "type": "line", "name": "Hourly count"},
         ],
         "layout": {
-            "title": "Total hourly events", **LAYOUT_COMMON
+            "title": "Total hourly events [last week]", **LAYOUT_COMMON
         }
     }
     
@@ -58,7 +58,7 @@ def _get_bywiki_fig_data(wiki):
     fig_data = dict()
     # wiki_hourly_bywiki_summary
     wiki_hourly_bywiki_summary = db.execute(
-        operation="select * from wiki_hourly_bywiki_summary where wiki_name == %(wiki)s order by interval asc",
+        operation="select * from wiki_hourly_bywiki_summary where wiki_name == %(wiki)s and interval >= subtractDays(now(), 7) order by interval asc",
         parameters={"wiki": wiki}
     )
     fig_data["wiki_hourly_bywiki_summary"] = {
@@ -66,7 +66,7 @@ def _get_bywiki_fig_data(wiki):
             {"x": wiki_hourly_bywiki_summary.get("interval"), "y": wiki_hourly_bywiki_summary.get("events"), "type": "line", "name": wiki},
         ],
         "layout": {
-            "title": f"Hourly events [{wiki}]", **LAYOUT_COMMON
+            "title": f"Hourly events [last week] [{wiki}]", **LAYOUT_COMMON
         }
     }
 
